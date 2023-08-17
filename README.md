@@ -27,3 +27,4 @@ Ansible Module for working with Akamai OPEN APIs
 # Acknowledgements
 - The Akamai Technologies [api-kickstart](https://github.com/akamai/api-kickstart) repository where many other Akamai API examples are available!
 - The Akamai API Catalog: https://developer.akamai.com/api/
+- Jacob Hudson (@jacob-hudson) for the initial work on the library.

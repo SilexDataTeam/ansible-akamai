@@ -21,7 +21,7 @@ Ansible Module for working with Akamai OPEN APIs
     * "productId": "prd_Alta",
     * "propertyName": "my.new.property.com",
 - `headers` - The request headers that needs to used only for POST method
-    * "Content-Type": "application/json"
+    * "Content-Type": "application/json"d
     * "PAPI-Use-Prefixes": "true"
 
 # Acknowledgements

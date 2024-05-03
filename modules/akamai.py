@@ -54,8 +54,12 @@ options:
         description:
             - Path to the edgerc file with authentication details
         required: false
-        default: ~/.edgerc
         type: str
+    edge_auth:
+        description:
+            - Dictionary containing host, client_token, client_secret and auth_token
+        required: false
+        type: dict
 """
 
 EXAMPLES = ''' examples '''
@@ -67,25 +71,37 @@ def get_request_file(json_file):
     return body
 
 def authenticate(params):
-    if params["edge_config"].startswith('~'):
-        # get home location
-        home = expanduser("~")
-        filename = params["edge_config"].replace('~', home)
-    else:
-        filename = params["edge_config"]
-
-    # extract edgerc properties
-    edgerc = EdgeRc(filename)
+    s = requests.Session()
 
     # values from ansible
     endpoint = params["endpoint"]
-    section = params["section"]
 
-    # creates baseurl for akamai
-    baseurl = 'https://%s' % edgerc.get(section, 'host')
+    if params["edge_config"]:
+        if params["edge_config"].startswith('~'):
+            # get home location
+            home = expanduser("~")
+            filename = params["edge_config"].replace('~', home)
+        else:
+            filename = params["edge_config"]
 
-    s = requests.Session()
-    s.auth = EdgeGridAuth.from_edgerc(edgerc, section)
+        # extract edgerc properties
+        edgerc = EdgeRc(filename)
+
+        # values from ansible
+        section = params["section"]
+
+        # creates baseurl for akamai
+        baseurl = 'https://%s' % edgerc.get(section, 'host')
+        s.auth = EdgeGridAuth.from_edgerc(edgerc, section)
+
+    if params["edge_auth"]:
+        # creates baseurl for akamai
+        baseurl = 'https://%s' % params["edge_auth"]['host']
+        s.auth = EdgeGridAuth(
+            client_token=params["edge_auth"]['client_token'],
+            client_secret=params["edge_auth"]['client_secret'],
+            access_token=params["edge_auth"]['access_token']
+        )
 
     if params["method"] == "GET":
         response = s.get(urljoin(baseurl, endpoint))
@@ -140,10 +156,24 @@ def main():
         "method": {"required": True, "type": "str"},
         "body": {"required": False, "type": "str"},
         "headers": {"required": False, "type": "str"},
-        "edge_config": {"required": False, "type": "str", "default": "~/.edgerc" }
+        "edge_config": {"required": False, "type": "str"},
+        "edge_auth": {
+            "required": False,
+            "type": "dict",
+            "options": {
+                "host": {"required": True, "type": "str"},
+                "client_token": {"required": True, "type": "str"},
+                "client_secret": {"required": True, "type": "str"},
+                "access_token": {"required": True, "type": "str"}
+            }
+        }
     }
 
-    module = AnsibleModule(argument_spec=fields)
+    required_list = [
+        ('edge_config', 'edge_auth'),
+    ]
+
+    module = AnsibleModule(argument_spec=fields, mutually_exclusive=required_list, required_one_of=required_list)
 
     is_error, has_changed, result = authenticate(module.params)
 

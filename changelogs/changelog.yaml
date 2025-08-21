@@ -1,0 +1,12 @@
+---
+ancestor: null
+releases:
+  1.0.0:
+    changes:
+      minor_changes:
+        - Add the akamai plugin for managing Akamai resources.
+        - Standardize the repository structure
+      release_summary: Initial release of the silexdata.akamai Ansible Collection.
+    fragments:
+      - 1.0.0.yaml
+    release_date: '2025-08-21'

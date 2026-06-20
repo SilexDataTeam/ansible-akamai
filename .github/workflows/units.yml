@@ -1,0 +1,22 @@
+---
+name: Units
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  units:
+    uses: ./.github/workflows/ansible-test.yml
+    with:
+      test-type: units

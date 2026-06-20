@@ -1,0 +1,3 @@
+---
+trivial:
+  - Add GitHub Actions workflows (lint, sanity, units, integration) using a reusable ansible-test workflow across the supported ansible-core matrix.

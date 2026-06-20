@@ -1,0 +1,26 @@
+---
+name: Integration
+
+# Service-independent tests (argument validation, check-mode) always run; live,
+# service-dependent tests are skipped when the Akamai service is unavailable
+# (a warning annotation is raised). Set setup_akamai_require_service=true via
+# integration_config.yml to fail instead of skipping.
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  integration:
+    uses: ./.github/workflows/ansible-test.yml
+    with:
+      test-type: integration

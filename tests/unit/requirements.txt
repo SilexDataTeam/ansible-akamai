@@ -1,0 +1,5 @@
+# Dependencies for unit tests. Installed by `ansible-test units --requirements`.
+requests
+edgegrid-python
+pytest
+pytest-mock

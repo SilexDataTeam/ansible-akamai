@@ -1,0 +1,25 @@
+---
+# Live (service-dependent) tests: validate the data the Akamai API actually
+# returns. These require a reachable service, so the whole block is skipped when
+# setup_akamai reports the service as unavailable. In that case setup_akamai has
+# already emitted a warning (or failed the run, if setup_akamai_require_service
+# is enabled).
+
+- name: Expected-return-values | Live API response checks
+  when: manage_akamai_service_available | bool
+  block:
+    - name: Expected-return-values | Gather Site Shield maps
+      silexdata.akamai.manage_akamai:
+        method: GET
+        endpoint: "{{ manage_akamai_endpoint }}"
+        edge_auth: "{{ manage_akamai_edge_auth }}"
+      register: manage_akamai_siteshield
+
+    - name: Expected-return-values | Assert the response shape
+      ansible.builtin.assert:
+        that:
+          - manage_akamai_siteshield is not failed
+          - manage_akamai_siteshield is not changed
+          - manage_akamai_siteshield.msg is defined
+        fail_msg: "Unexpected response from Akamai API: {{ manage_akamai_siteshield }}"
+        success_msg: "Akamai API returned the expected response shape."

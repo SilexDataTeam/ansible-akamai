@@ -1,0 +1,49 @@
+---
+# Expected-failure tests for manage_akamai.
+#
+# These exercise the argument-spec validation that AnsibleModule performs
+# *before* any network request is made (required params, required_one_of,
+# mutually_exclusive), so they are safe to run with no live Akamai service.
+
+- name: Expected-failures | Fails when neither edge_config nor edge_auth is provided
+  silexdata.akamai.manage_akamai:
+    method: GET
+    endpoint: "{{ manage_akamai_endpoint }}"
+  register: manage_akamai_missing_auth
+  ignore_errors: true
+
+- name: Expected-failures | Assert required_one_of validation failed
+  ansible.builtin.assert:
+    that:
+      - manage_akamai_missing_auth is failed
+    fail_msg: "Module should fail when no authentication method is supplied."
+    success_msg: "Module correctly required one of edge_config / edge_auth."
+
+- name: Expected-failures | Fails when edge_config and edge_auth are both provided
+  silexdata.akamai.manage_akamai:
+    method: GET
+    endpoint: "{{ manage_akamai_endpoint }}"
+    edge_config: /tmp/nonexistent.edgerc
+    edge_auth: "{{ manage_akamai_edge_auth }}"
+  register: manage_akamai_both_auth
+  ignore_errors: true
+
+- name: Expected-failures | Assert mutually_exclusive validation failed
+  ansible.builtin.assert:
+    that:
+      - manage_akamai_both_auth is failed
+    fail_msg: "Module should fail when both authentication methods are supplied."
+    success_msg: "Module correctly rejected mutually exclusive auth options."
+
+- name: Expected-failures | Fails when required parameters are missing
+  silexdata.akamai.manage_akamai:
+    edge_auth: "{{ manage_akamai_edge_auth }}"
+  register: manage_akamai_missing_required
+  ignore_errors: true
+
+- name: Expected-failures | Assert required-parameter validation failed
+  ansible.builtin.assert:
+    that:
+      - manage_akamai_missing_required is failed
+    fail_msg: "Module should fail when required params (method/endpoint) are missing."
+    success_msg: "Module correctly required the method and endpoint parameters."

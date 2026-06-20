@@ -1,0 +1,3 @@
+# Offline "dry-run" target: exercises module argument-spec validation only and
+# contacts no external service, so it runs as part of the normal integration
+# suite (no credentials required).

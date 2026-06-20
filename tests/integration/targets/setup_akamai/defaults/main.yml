@@ -1,0 +1,19 @@
+---
+# Variables owned by the setup_akamai role (role-name prefixed).
+setup_akamai_test_endpoint: "/siteshield/v1/maps"
+
+# Placeholder EdgeGrid credentials. Override these in
+# tests/integration/integration_config.yml to run the live (service-dependent)
+# tests against a real Akamai tenant.
+setup_akamai_api_host: "akab-dry-run.luna.akamaiapis.net"
+setup_akamai_client_token: "akab-dry-run-client-token"
+setup_akamai_client_secret: "dry-run-client-secret"
+setup_akamai_access_token: "akab-dry-run-access-token"
+
+# Service-availability handling. By default an unreachable service produces a
+# warning and the live tests are skipped. Set this to true (e.g. from the
+# pipeline) to fail the run instead when the service is down.
+setup_akamai_require_service: false
+
+# Seconds to wait when probing the API endpoint for availability.
+setup_akamai_service_probe_timeout: 5

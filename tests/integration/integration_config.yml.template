@@ -1,0 +1,17 @@
+---
+# Copy this file to integration_config.yml and fill in real EdgeGrid
+# credentials to run the live (service-dependent) integration tests.
+# integration_config.yml is git-ignored and must never be committed.
+
+# Override the placeholder credentials from setup_akamai/defaults:
+setup_akamai_api_host: "akab-xxxxxxxxxxxxxxxx.luna.akamaiapis.net"
+setup_akamai_client_token: "akab-xxxxxxxxxxxxxxxx-xxxxxxxxxxxxxxxx"
+setup_akamai_client_secret: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx="
+setup_akamai_access_token: "akab-xxxxxxxxxxxxxxxx-xxxxxxxxxxxxxxxx"
+
+# Fail the run (instead of warning and skipping live tests) when the Akamai
+# service is unreachable. Recommended for pipelines that require live coverage.
+# setup_akamai_require_service: true
+
+# Optional: override the read-only endpoint used by the live tests.
+# setup_akamai_test_endpoint: "/siteshield/v1/maps"

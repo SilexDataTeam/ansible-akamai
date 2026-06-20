@@ -1,0 +1,4 @@
+# Python dependencies required to import the module during integration tests.
+# Installed by `ansible-test integration --requirements`.
+requests
+edgegrid-python

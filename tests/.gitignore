@@ -1,0 +1,5 @@
+# ansible-test working output
+output/
+
+# Local integration credentials (never commit real credentials)
+integration/integration_config.yml

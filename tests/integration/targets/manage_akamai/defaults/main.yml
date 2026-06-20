@@ -1,0 +1,9 @@
+---
+# Inherit setup_akamai role outputs into properly prefixed manage_akamai
+# variables. Tasks in this role reference only the manage_akamai_* variables.
+manage_akamai_edge_auth: "{{ setup_akamai_edge_auth }}"
+manage_akamai_endpoint: "{{ setup_akamai_test_endpoint }}"
+
+# Whether the Akamai service was reachable (set by the setup_akamai role).
+# Live, service-dependent tests are gated on this.
+manage_akamai_service_available: "{{ setup_akamai_service_available }}"

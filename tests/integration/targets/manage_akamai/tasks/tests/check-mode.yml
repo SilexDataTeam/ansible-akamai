@@ -1,0 +1,28 @@
+---
+# Check-mode tests for manage_akamai.
+#
+# These are written assuming the module supports check mode: a read-only GET
+# must run in check mode and report no changes. They are intentionally NOT
+# conditional on the module's current check-mode support -- if the module does
+# not declare supports_check_mode, Ansible skips it and these assertions fail by
+# design, surfacing the missing check-mode support.
+
+- name: Check-mode | Run a GET request in check mode
+  silexdata.akamai.manage_akamai:
+    method: GET
+    endpoint: "{{ manage_akamai_endpoint }}"
+    edge_auth: "{{ manage_akamai_edge_auth }}"
+  check_mode: true
+  register: manage_akamai_check_mode
+  ignore_errors: true
+
+- name: Check-mode | Assert the module ran in check mode and made no changes
+  ansible.builtin.assert:
+    that:
+      - manage_akamai_check_mode is not skipped
+      - manage_akamai_check_mode is not failed
+      - manage_akamai_check_mode is not changed
+    fail_msg: >-
+      Module did not run correctly in check mode. The module must declare
+      supports_check_mode=True and make no changes when run in check mode.
+    success_msg: "Module supports check mode and reported no changes."

@@ -32,6 +32,9 @@ def set_module_args(args):
     """Prepare module arguments the way Ansible would pass them on stdin."""
     serialized = json.dumps({"ANSIBLE_MODULE_ARGS": args})
     basic._ANSIBLE_ARGS = to_bytes(serialized)
+    # ansible-core 2.19+ requires a serialization profile to be set alongside
+    # the raw args buffer when params are injected directly.
+    basic._ANSIBLE_PROFILE = "legacy"
 
 
 @pytest.fixture(autouse=True)

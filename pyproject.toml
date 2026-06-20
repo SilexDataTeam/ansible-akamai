@@ -13,11 +13,11 @@ extend-exclude = [
 [tool.ruff.lint]
 # E/W: pycodestyle, F: pyflakes, I: isort, UP: pyupgrade, B: flake8-bugbear
 select = ["E", "W", "F", "I", "UP", "B"]
-# F403/F405: `from ansible.module_utils.basic import *` is a historical Ansible
-# idiom still used by this module. Prefer migrating to explicit imports
-# (e.g. `from ansible.module_utils.basic import AnsibleModule`) and then drop
-# these ignores.
-ignore = ["F403", "F405"]
+
+[tool.ruff.lint.per-file-ignores]
+# Ansible modules must declare DOCUMENTATION/EXAMPLES/RETURN before their
+# imports, which conflicts with E402 (module-level import not at top of file).
+"plugins/modules/*.py" = ["E402"]
 
 [tool.ruff.format]
 quote-style = "preserve"

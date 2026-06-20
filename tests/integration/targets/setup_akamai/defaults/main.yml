@@ -4,8 +4,11 @@ setup_akamai_test_endpoint: "/siteshield/v1/maps"
 
 # Placeholder EdgeGrid credentials. Override these in
 # tests/integration/integration_config.yml to run the live (service-dependent)
-# tests against a real Akamai tenant.
-setup_akamai_api_host: "akab-dry-run.luna.akamaiapis.net"
+# tests against a real Akamai tenant. The default host uses the reserved
+# .invalid TLD (RFC 6761) so the availability probe reliably reports the
+# service as down during a dry-run (Akamai's wildcard DNS would otherwise make
+# a bogus *.akamaiapis.net host look reachable).
+setup_akamai_api_host: "dry-run.akamai.invalid"
 setup_akamai_client_token: "akab-dry-run-client-token"
 setup_akamai_client_secret: "dry-run-client-secret"
 setup_akamai_access_token: "akab-dry-run-access-token"

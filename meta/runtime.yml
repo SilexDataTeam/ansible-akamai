@@ -1,2 +1,13 @@
 ---
 requires_ansible: '>=2.14.0'
+
+plugin_routing:
+  modules:
+    akamai:
+      redirect: silexdata.akamai.manage_akamai
+      deprecation:
+        removal_version: 2.0.0
+        warning_text: >-
+          The silexdata.akamai.akamai module has been renamed to
+          silexdata.akamai.manage_akamai. Update tasks to use the new name;
+          the old name is a deprecated redirect and will be removed in 2.0.0.

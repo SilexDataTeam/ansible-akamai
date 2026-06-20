@@ -1,4 +1,4 @@
-# akamai Module
+# manage_akamai Module
 Ansible Module for working with Akamai OPEN APIs
 
 # Prerequisites
@@ -6,7 +6,15 @@ Ansible Module for working with Akamai OPEN APIs
 - Edgegrid-Python (install with `pip install edgegrid-python`), works with Python 2.7.10+
 
 # Install
-- Drop `akamai.py` into `./library` in any Ansible playbook, then invoke it like any standard module
+- Install the collection from Ansible Galaxy:
+  ```
+  ansible-galaxy collection install silexdata.akamai
+  ```
+- Or install directly from the source repository:
+  ```
+  ansible-galaxy collection install git+https://github.com/SilexDataTeam/ansible-akamai.git
+  ```
+- Once installed, invoke the module by its fully qualified collection name, `silexdata.akamai.manage_akamai`
 
 # Credentials
 - Akamai OPEN credentials are required to use this module.  A reference to get the credentials can be found here - [Get Credentials](https://developer.akamai.com/introduction/Prov_Creds.htm)

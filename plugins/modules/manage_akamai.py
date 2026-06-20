@@ -13,7 +13,7 @@ from os.path import expanduser
 
 DOCUMENTATION = """
 ---
-module: akamai
+module: manage_akamai
 short_description: Module to use edgerc auth with Edgegrid to interact with the Akamai API
 author:
     - Jacob Hudson (@jacob-hudson)

@@ -1,0 +1,23 @@
+# Project tooling configuration for the silexdata.akamai collection.
+# This file configures developer tooling only; it is not part of the published
+# collection artifact (see build_ignore in galaxy.yml).
+
+[tool.ruff]
+line-length = 160
+target-version = "py39"
+extend-exclude = [
+    "changelogs",
+    "tests/output",
+]
+
+[tool.ruff.lint]
+# E/W: pycodestyle, F: pyflakes, I: isort, UP: pyupgrade, B: flake8-bugbear
+select = ["E", "W", "F", "I", "UP", "B"]
+# F403/F405: `from ansible.module_utils.basic import *` is a historical Ansible
+# idiom still used by this module. Prefer migrating to explicit imports
+# (e.g. `from ansible.module_utils.basic import AnsibleModule`) and then drop
+# these ignores.
+ignore = ["F403", "F405"]
+
+[tool.ruff.format]
+quote-style = "preserve"

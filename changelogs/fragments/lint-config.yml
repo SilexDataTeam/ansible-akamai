@@ -1,0 +1,3 @@
+---
+trivial:
+  - Add linter configuration (ruff, yamllint, pymarkdownlnt, ansible-lint) and exclude dev/CI tooling files from the built collection artifact.

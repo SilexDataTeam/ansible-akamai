@@ -1,0 +1,4 @@
+# Runtime dependencies needed for the sanity "import" test to resolve the
+# module's imports. Installed by `ansible-test sanity --requirements`.
+requests
+edgegrid-python

@@ -1,0 +1,41 @@
+---
+name: Changelog
+
+# Validate that every pull request into main adds a changelog fragment.
+# Fragment syntax itself is linted by the Lint workflow (pre-commit runs the
+# antsibull-changelog hooks).
+on:
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: changelog-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  fragment-present:
+    name: Require a changelog fragment
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out PR
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Ensure a changelog fragment was added
+        env:
+          BASE: ${{ github.base_ref }}
+        run: |
+          git fetch --quiet origin "$BASE"
+          added=$(git diff --name-only --diff-filter=A "origin/${BASE}...HEAD" \
+            -- 'changelogs/fragments/' | grep -vE '/\.gitkeep$' || true)
+          if [ -z "$added" ]; then
+            echo "::error::No changelog fragment added under changelogs/fragments/ - add one describing your change."
+            exit 1
+          fi
+          echo "Found new changelog fragment(s):"
+          echo "$added"

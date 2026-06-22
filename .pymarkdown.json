@@ -8,6 +8,12 @@
     },
     "md041": {
       "enabled": false
+    },
+    "md046": {
+      "style": "fenced"
+    },
+    "md059": {
+      "enabled": false
     }
   }
 }

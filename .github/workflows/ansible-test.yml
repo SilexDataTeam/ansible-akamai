@@ -41,12 +41,12 @@ jobs:
             python: "3.12"
     steps:
       - name: Check out collection
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           path: ansible_collections/silexdata/akamai
 
       - name: Set up Python ${{ matrix.python }}
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.python }}
 

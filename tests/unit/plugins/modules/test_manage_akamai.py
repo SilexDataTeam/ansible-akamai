@@ -1,7 +1,17 @@
 # Copyright: (c) 2024, Silex Data
 # Apache License 2.0 (see LICENSE or https://www.apache.org/licenses/LICENSE-2.0)
+
+from __future__ import absolute_import, division, print_function
+
+__metaclass__ = type
+
 import json
-from unittest.mock import MagicMock, patch
+import sys
+
+if sys.version_info < (3, 3):
+    from mock import MagicMock, patch
+else:
+    from unittest.mock import MagicMock, patch
 
 import pytest
 from ansible.module_utils import basic

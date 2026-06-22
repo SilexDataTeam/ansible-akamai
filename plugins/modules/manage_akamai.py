@@ -1,6 +1,11 @@
 # Copyright: (c) 2024, Silex Data
 # SPDX-License-Identifier: Apache-2.0
 # Apache License 2.0 (see LICENSE or https://www.apache.org/licenses/LICENSE-2.0)
+
+from __future__ import absolute_import, division, print_function
+
+__metaclass__ = type
+
 DOCUMENTATION = r'''
 ---
 module: manage_akamai

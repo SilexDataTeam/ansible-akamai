@@ -1,3 +1,0 @@
----
-trivial:
-  - Add ansible-test unit tests for the manage_akamai module.

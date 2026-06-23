@@ -1,3 +1,0 @@
----
-trivial:
-  - Add ansible-test integration targets (setup_akamai, manage_akamai) with dry-run, check-mode, and service-gated live tests.

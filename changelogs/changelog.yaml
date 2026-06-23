@@ -10,3 +10,45 @@ releases:
     fragments:
       - 1.0.0.yaml
     release_date: '2025-08-21'
+  1.1.0:
+    changes:
+      bugfixes:
+        - manage_akamai - fail with a clear ``missing required library`` message when
+          ``requests`` or ``edgegrid-python`` is not installed, instead of raising
+          an import error or printing to stdout.
+        - manage_akamai - guard the optional third-party imports so the module can
+          be imported (and its documentation collected) without ``requests`` or ``edgegrid-python``
+          present.
+      deprecated_features:
+        - manage_akamai - the old module name ``silexdata.akamai.akamai`` is deprecated
+          in favor of ``silexdata.akamai.manage_akamai`` and will be removed in 2.0.0;
+          a redirect keeps it working with a deprecation warning.
+      minor_changes:
+        - manage_akamai - add check mode support; no API calls are made in check mode
+          and a change is predicted only for write methods (PATCH, POST, PUT).
+        - manage_akamai - document the ``edge_auth`` suboptions and correct the documented
+          ``edge_config`` type to ``path``.
+        - manage_akamai - validate the ``method`` parameter against its supported
+          choices (GET, PATCH, POST, PUT).
+      release_summary: 'This release adds a test and CI pipeline for the collection
+        and hardens the
+
+        ``manage_akamai`` module: check mode support, graceful handling of missing
+
+        Python dependencies, stricter input validation, and documentation and
+
+        packaging-standards fixes.
+
+        '
+    fragments:
+      - add-release-and-changelog-ci.yml
+      - ci-workflows.yml
+      - coverage.yml
+      - integration-tests.yml
+      - lint-config.yml
+      - manage_akamai-improvements.yml
+      - pre-commit-config.yml
+      - sanity-requirements.yml
+      - tox-ansible-antsibull-nox.yml
+      - unit-tests.yml
+    release_date: '2026-06-23'

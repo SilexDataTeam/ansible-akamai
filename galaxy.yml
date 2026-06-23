@@ -72,4 +72,6 @@ build_ignore:
   - .pymarkdown.json
   - .ansible-lint
   - pyproject.toml
+  - noxfile.py
+  - antsibull-nox.toml
   - tests/output

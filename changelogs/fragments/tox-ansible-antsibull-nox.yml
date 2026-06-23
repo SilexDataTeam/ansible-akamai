@@ -1,0 +1,16 @@
+---
+minor_changes:
+  - Add ``noxfile.py`` and ``antsibull-nox.toml`` to enable antsibull-nox as
+    the primary local and CI test runner. Default sessions cover ruff linting,
+    yamllint, ansible-lint, docs check (antsibull-docs), collection build and
+    Galaxy importer validation, trailing-whitespace checks, and ansible-test
+    sanity and unit matrices across all supported ansible-core versions.
+  - Add ``[tool.tox-ansible]`` configuration to ``pyproject.toml`` for running
+    sanity, unit, and integration tests via tox-ansible (``tox --ansible``).
+  - Replace the separate ``sanity.yml`` and ``units.yml`` GitHub Actions
+    workflows and the reusable ``ansible-test.yml`` workflow with a single
+    ``nox.yml`` workflow that uses the
+    ``ansible-community/antsibull-nox`` reusable matrix workflow, eliminating
+    the hand-maintained ansible-core version matrix.
+  - Inline the integration test matrix and steps from the now-deleted
+    ``ansible-test.yml`` reusable workflow directly into ``integration.yml``.

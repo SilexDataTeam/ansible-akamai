@@ -1,0 +1,99 @@
+# antsibull-nox configuration for the silexdata.akamai collection.
+# Loaded by noxfile.py via antsibull_nox.load_antsibull_nox_toml().
+# Run `nox --list` to see all available sessions.
+# Run `nox` to execute all default sessions.
+# Run `nox -R` to reuse existing virtual environments (faster iterative runs).
+
+[collection]
+# Match the minimum Python version supported by ansible-core 2.14 controller.
+min_python_version = "3.10"
+
+# ---------------------------------------------------------------------------
+# Lint
+# ---------------------------------------------------------------------------
+[sessions.lint]
+# Use ruff as the unified formatter and linter instead of the legacy defaults.
+run_isort = false           # ruff handles import sorting
+run_black = false           # ruff handles formatting
+run_ruff_format = true      # ruff format (formatter session)
+ruff_format_package = "ruff"
+run_ruff_autofix = true     # ruff check --fix (formatter session)
+ruff_autofix_package = "ruff"
+run_ruff_check = true       # ruff check read-only (codeqa session)
+run_flake8 = false          # ruff supersedes flake8
+run_pylint = false          # ruff covers most pylint rules; module code is simple
+run_mypy = false            # module files lack type annotations
+
+# ---------------------------------------------------------------------------
+# Ansible-lint
+# ---------------------------------------------------------------------------
+[sessions.ansible_lint]
+# Match the moderate profile set in .ansible-lint.
+strict = false
+
+# ---------------------------------------------------------------------------
+# Documentation check (antsibull-docs)
+# ---------------------------------------------------------------------------
+[sessions.docs_check]
+
+# ---------------------------------------------------------------------------
+# Collection build + Galaxy importer
+# ---------------------------------------------------------------------------
+[sessions.build_import_check]
+
+# ---------------------------------------------------------------------------
+# License check (opt-in: collection is not yet REUSE-compliant)
+# ---------------------------------------------------------------------------
+[sessions.license_check]
+default = false
+# Collection uses Apache-2.0 (declared in galaxy.yml) but is not REUSE-compliant.
+run_reuse = false
+
+# ---------------------------------------------------------------------------
+# Extra checks
+# ---------------------------------------------------------------------------
+[sessions.extra_checks]
+run_no_trailing_whitespace = true
+
+# ---------------------------------------------------------------------------
+# ansible-test sanity
+# ---------------------------------------------------------------------------
+[sessions.ansible_test_sanity]
+default = true
+# Minimum ansible-core version matches galaxy.yml requires_ansible (>=2.14.0).
+min_version = "2.14"
+
+# ---------------------------------------------------------------------------
+# ansible-test units
+# ---------------------------------------------------------------------------
+[sessions.ansible_test_units]
+default = true
+min_version = "2.14"
+
+# ---------------------------------------------------------------------------
+# Execution environment check (opt-in: no EE configs in this collection)
+# ---------------------------------------------------------------------------
+[sessions.execution_environment_check]
+default = false
+
+# ---------------------------------------------------------------------------
+# ansible-test integration (default container, opt-in)
+# ---------------------------------------------------------------------------
+# Not in the default run because live tests require valid Akamai credentials.
+# Run explicitly: nox -e ansible-test-integration-default-<ansible_core>
+# Dry-run (no credentials) still passes; setup_akamai gates live tests on
+# service availability via the setup_akamai_service_available fact.
+[sessions.ansible_test_integration_w_default_container]
+default = false
+min_version = "2.14"
+
+# Map Ansible variables to environment variables so CI can inject credentials
+# without committing them.  Unset env vars leave the role defaults in place,
+# which point to dry-run.akamai.invalid and cause live tests to be skipped.
+[sessions.ansible_test_integration_w_default_container.ansible_vars_from_env_vars]
+setup_akamai_api_host = "AKAMAI_API_HOST"
+setup_akamai_client_token = "AKAMAI_CLIENT_TOKEN"
+setup_akamai_client_secret = "AKAMAI_CLIENT_SECRET"
+setup_akamai_access_token = "AKAMAI_ACCESS_TOKEN"
+# Set to "true" in CI to fail instead of skipping when the service is down.
+setup_akamai_require_service = "AKAMAI_REQUIRE_SERVICE"

@@ -2,6 +2,22 @@
 # This file configures developer tooling only; it is not part of the published
 # collection artifact (see build_ignore in galaxy.yml).
 
+# ---------------------------------------------------------------------------
+# tox-ansible
+# ---------------------------------------------------------------------------
+# tox-ansible auto-generates sanity, unit, and integration environments for
+# each ansible-core version installed in .tox/.  List and run them with:
+#   tox list --ansible
+#   tox -e sanity-py3.12-2.21 --ansible
+#   tox -f unit --ansible -p auto
+#   tox --ansible -p auto   # run everything in parallel
+[tool.tox]
+min_version = "4.2"
+
+[tool.tox-ansible]
+# Uncomment to skip specific ansible-core or Python versions, e.g.:
+# skip = ["2.14", "devel"]
+
 [tool.ruff]
 line-length = 160
 target-version = "py39"

@@ -1,0 +1,33 @@
+---
+# Run all default antsibull-nox sessions.
+#
+# Non-matrix sessions (lint, docs_check, ansible_lint, build_import_check,
+# extra_checks) run as individual jobs.  Matrix sessions (ansible_test_sanity,
+# ansible_test_units) generate one job per ansible-core × Python pair.
+#
+# This workflow replaces the separate sanity.yml and units.yml workflows.
+# Integration tests still run via integration.yml (ansible-test directly)
+# because of the service-availability warning annotation.
+name: Nox
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  nox:
+    uses: ansible-community/antsibull-nox/.github/workflows/reusable-nox-matrix.yml@stable-1
+    with:
+      # Match the collection's minimum ansible-core requirement from
+      # meta/runtime.yml (requires_ansible: '>=2.14.0').
+      min-ansible-core: "2.14"

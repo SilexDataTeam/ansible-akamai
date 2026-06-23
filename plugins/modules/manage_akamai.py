@@ -13,6 +13,7 @@ short_description: Module to use edgerc auth with Edgegrid to interact with the 
 author:
   - Jacob Hudson (@jacob-hudson)
   - Matt Hyclak (@mhyclak-silex)
+  - Caleb Denney (@cdenney-silex)
 version_added: "1.0.0"
 description:
   - Interacts with the Akamai API using the Python EdgeGrid library.
@@ -191,50 +192,19 @@ def authenticate(params, check_mode=False):
             access_token=params["edge_auth"]['access_token'],
         )
 
-    if params["method"] == "GET":
-        response = s.get(urljoin(baseurl, endpoint))
-        if response.status_code not in [400, 401, 404]:
-            return False, False, response.json()
-        else:
-            return True, False, response.json()
-    elif params["method"] == "PATCH":
-        if params["body"] is not None:
-            body = get_request_file(params["body"])
-            headers = {'content-type': 'application/json'}
-            response = s.patch(urljoin(baseurl, endpoint), json=body, headers=headers)
-        else:
-            headers = {'content-type': 'application/json'}
-            response = s.patch(urljoin(baseurl, endpoint), headers=headers)
-        if response.status_code not in [400, 401, 404]:
-            return False, True, response.json()
-        else:
-            return True, False, response.json()
-    elif params["method"] == "POST":
-        if params["body"] is not None:
-            body = get_request_file(params["body"])
-            headers = {'content-type': 'application/json'}
-            response = s.post(urljoin(baseurl, endpoint), json=body, headers=headers)
-        else:
-            headers = {'content-type': 'application/json'}
-            response = s.post(urljoin(baseurl, endpoint), headers=headers)
-        if response.status_code not in [400, 401, 404]:
-            return False, True, response.json()
-        else:
-            return True, False, response.json()
-    elif params["method"] == "PUT":
-        if params["body"] is not None:
-            body = get_request_file(params["body"])
-            headers = {'content-type': 'application/json'}
-            response = s.put(urljoin(baseurl, endpoint), json=body, headers=headers)
-        else:
-            headers = {'content-type': 'application/json'}
-            response = s.put(urljoin(baseurl, endpoint), headers=headers)
-        if response.status_code not in [400, 401, 404]:
-            return False, True, response.json()
-        else:
-            return True, False, response.json()
-    else:  # error
-        pass
+    method = getattr(s, params["method"].lower())
+    headers = {'content-type': 'application/json'}
+    url = urljoin(baseurl, endpoint)
+    if params["body"] is not None:
+        body = get_request_file(params["body"])
+        response = method(url, json=body, headers=headers)
+    else:
+        response = method(url, headers=headers)
+    changed = params["method"].upper() != "GET"
+    if response.status_code not in [400, 401, 404]:
+        return False, changed, response.json()
+    else:
+        return True, False, response.json()
 
 
 def main():

@@ -146,3 +146,125 @@ def test_authenticate_get_error_status(mock_session_cls, _mock_edgegrid):
     assert is_error is True
     assert has_changed is False
     assert result == {"detail": "not found"}
+
+
+@patch.object(manage_akamai, "EdgeGridAuth", create=True)
+@patch.object(manage_akamai, "EdgeRc", create=True)
+@patch.object(manage_akamai.requests, "Session")
+def test_authenticate_get_with_edge_config(mock_session_cls, mock_edgerc_cls, _mock_edgegrid):
+    mock_edgerc_instance = MagicMock()
+    mock_edgerc_instance.get.return_value = "akab-example.luna.akamaiapis.net"
+    mock_edgerc_cls.return_value = mock_edgerc_instance
+
+    response = MagicMock()
+    response.status_code = 200
+    response.json.return_value = {"result": "ok"}
+
+    session = MagicMock()
+    session.get.return_value = response
+    mock_session_cls.return_value = session
+
+    params = {
+        "endpoint": "/test",
+        "method": "GET",
+        "section": "default",
+        "body": None,
+        "headers": None,
+        "edge_config": "/fake/.edgerc",
+        "edge_auth": None,
+    }
+
+    is_error, has_changed, result = manage_akamai.authenticate(params)
+
+    assert is_error is False
+    assert has_changed is False
+    assert result == {"result": "ok"}
+    mock_edgerc_cls.assert_called_once_with("/fake/.edgerc")
+
+
+@patch.object(manage_akamai, "EdgeGridAuth", create=True)
+@patch.object(manage_akamai.requests, "Session")
+def test_authenticate_post_with_body(mock_session_cls, _mock_edgegrid, tmp_path):
+    payload = {"key": "value"}
+    body_file = tmp_path / "body.json"
+    body_file.write_text(json.dumps(payload))
+
+    response = MagicMock()
+    response.status_code = 200
+    response.json.return_value = {"created": True}
+
+    session = MagicMock()
+    session.post.return_value = response
+    mock_session_cls.return_value = session
+
+    params = {
+        "endpoint": "/test/resource",
+        "method": "POST",
+        "section": "default",
+        "body": str(body_file),
+        "headers": None,
+        "edge_config": None,
+        "edge_auth": EDGE_AUTH,
+    }
+
+    is_error, has_changed, result = manage_akamai.authenticate(params)
+
+    assert is_error is False
+    assert has_changed is True
+    assert result == {"created": True}
+    session.post.assert_called_once()
+
+
+def test_main_fails_without_requests(monkeypatch):
+    monkeypatch.setattr(manage_akamai, "HAS_REQUESTS", False)
+    set_module_args({"endpoint": "/test", "method": "GET", "edge_auth": EDGE_AUTH})
+    with pytest.raises(AnsibleFailJson) as exc_info:
+        manage_akamai.main()
+    assert "requests" in exc_info.value.args[0]["msg"]
+
+
+def test_main_fails_without_edgegrid(monkeypatch):
+    monkeypatch.setattr(manage_akamai, "HAS_EDGEGRID", False)
+    set_module_args({"endpoint": "/test", "method": "GET", "edge_auth": EDGE_AUTH})
+    with pytest.raises(AnsibleFailJson) as exc_info:
+        manage_akamai.main()
+    assert "edgegrid" in exc_info.value.args[0]["msg"].lower()
+
+
+@patch.object(manage_akamai, "EdgeGridAuth", create=True)
+@patch.object(manage_akamai.requests, "Session")
+def test_main_get_success(mock_session_cls, _mock_edgegrid):
+    response = MagicMock()
+    response.status_code = 200
+    response.json.return_value = {"data": "ok"}
+
+    session = MagicMock()
+    session.get.return_value = response
+    mock_session_cls.return_value = session
+
+    set_module_args({"endpoint": "/test", "method": "GET", "edge_auth": EDGE_AUTH})
+
+    with pytest.raises(AnsibleExitJson) as exc_info:
+        manage_akamai.main()
+
+    assert exc_info.value.args[0]["changed"] is False
+    assert exc_info.value.args[0]["msg"] == {"data": "ok"}
+
+
+@patch.object(manage_akamai, "EdgeGridAuth", create=True)
+@patch.object(manage_akamai.requests, "Session")
+def test_main_get_error(mock_session_cls, _mock_edgegrid):
+    response = MagicMock()
+    response.status_code = 401
+    response.json.return_value = {"detail": "unauthorized"}
+
+    session = MagicMock()
+    session.get.return_value = response
+    mock_session_cls.return_value = session
+
+    set_module_args({"endpoint": "/test", "method": "GET", "edge_auth": EDGE_AUTH})
+
+    with pytest.raises(AnsibleFailJson) as exc_info:
+        manage_akamai.main()
+
+    assert exc_info.value.args[0]["msg"] == {"detail": "unauthorized"}

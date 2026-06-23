@@ -123,3 +123,14 @@ jobs:
           ansible-galaxy collection build --output-path dist --force
           ansible-galaxy collection publish "dist/silexdata-akamai-${VERSION}.tar.gz" \
             --api-key "${{ secrets.GALAXY_API_KEY }}"
+
+      - name: Create GitHub release
+        if: steps.ver.outputs.release == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+          VERSION: ${{ steps.ver.outputs.version }}
+        run: |
+          gh release create "${VERSION}" \
+            "dist/silexdata-akamai-${VERSION}.tar.gz" \
+            --title "${VERSION}" \
+            --generate-notes

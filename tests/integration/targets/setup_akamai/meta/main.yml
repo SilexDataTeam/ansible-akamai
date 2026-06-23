@@ -1,0 +1,4 @@
+---
+# Setup role for the akamai collection integration tests. It has no
+# dependencies of its own and is depended upon by the manage_* targets.
+dependencies: []

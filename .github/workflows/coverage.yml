@@ -1,0 +1,67 @@
+---
+name: Coverage
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  coverage:
+    name: Coverage (ansible-core 2.21)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out collection
+        uses: actions/checkout@v7
+        with:
+          path: ansible_collections/silexdata/akamai
+
+      - name: Set up Python 3.14
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.14"
+
+      - name: Install ansible-core 2.21
+        run: python -m pip install "ansible-core~=2.21.0"
+
+      - name: Run unit tests with coverage
+        working-directory: ansible_collections/silexdata/akamai
+        run: ansible-test units --coverage --docker -v --requirements
+
+      # Run without --color so the teed log greps cleanly.
+      - name: Run integration tests with coverage
+        working-directory: ansible_collections/silexdata/akamai
+        run: |
+          set -o pipefail
+          ansible-test integration manage_akamai --coverage --docker -v --requirements \
+            2>&1 | tee "${RUNNER_TEMP}/integration.log"
+
+      - name: Surface service-availability warning
+        if: always()
+        run: |
+          log="${RUNNER_TEMP}/integration.log"
+          if [ -f "$log" ] && grep -aq 'SETUP_SERVICE_UNAVAILABLE' "$log"; then
+            echo "::warning title=Akamai service unavailable::Live integration tests skipped (service unreachable)."
+          fi
+
+      - name: Generate coverage report
+        working-directory: ansible_collections/silexdata/akamai
+        run: |
+          ansible-test coverage report --requirements
+          ansible-test coverage xml --requirements
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v7
+        with:
+          name: coverage-report
+          path: ansible_collections/silexdata/akamai/tests/output/reports/
+          if-no-files-found: warn

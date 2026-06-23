@@ -1,0 +1,3 @@
+---
+trivial:
+  - Add pre-commit configuration running the lint hooks locally.

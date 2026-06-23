@@ -26,7 +26,9 @@ Please check the included content on the [Ansible Galaxy page for this collectio
 
 You must install this collection from [Ansible Galaxy](https://galaxy.ansible.com/ui/repo/published/silexdata/akamai/) using the `ansible-galaxy` command-line tool, regardless of your Ansible installation type:
 
-    ansible-galaxy collection install silexdata.akamai
+```shell
+ansible-galaxy collection install silexdata.akamai
+```
 
 You can also include it in a `requirements.yml` file and install it via `ansible-galaxy collection install -r requirements.yml` using the format:
 
@@ -63,11 +65,11 @@ See [here](https://docs.ansible.com/ansible/devel/dev_guide/developing_collectio
 
 To learn how to maintain / become a maintainer of this collection, refer to:
 
-* [Maintainer guidelines](https://github.com/ansible/community-docs/blob/main/maintaining.rst).
+- [Maintainer guidelines](https://github.com/ansible/community-docs/blob/main/maintaining.rst).
 
 It is necessary for maintainers of this collection to be subscribed to:
 
-* The collection itself (the `Watch` button → `All Activity` in the upper right corner of the repository's homepage).
+- The collection itself (the `Watch` button → `All Activity` in the upper right corner of the repository's homepage).
 
 ## Publishing New Version
 
@@ -88,6 +90,6 @@ See the [changelog](https://github.com/SilexDataTeam/ansible-akamai/blob/main/CH
 
 This collection is licensed under the Apache License, Version 2.0.
 
-See the [LICENSE](LICENSE) file in this repository or visit the official license page: https://www.apache.org/licenses/LICENSE-2.0
+See the [LICENSE](LICENSE) file in this repository or visit the official license page: <https://www.apache.org/licenses/LICENSE-2.0>
 
 You are free to use, modify, and distribute this collection under the terms of the Apache 2.0 license. Contributions to this project will also be licensed under Apache 2.0 unless otherwise noted.

@@ -1,0 +1,12 @@
+---
+# This file performs no tests itself. It discovers and runs every test file
+# under tasks/tests/, each of which groups a category of tests (e.g.
+# expected-failures, check-mode). Add a new category by dropping another
+# <category>.yml file into tasks/tests/.
+
+- name: Run all manage_akamai test categories
+  ansible.builtin.include_tasks: "{{ manage_akamai_test_file }}"
+  loop: "{{ query('ansible.builtin.fileglob', role_path ~ '/tasks/tests/*.yml') | sort }}"
+  loop_control:
+    loop_var: manage_akamai_test_file
+    label: "{{ manage_akamai_test_file | basename }}"

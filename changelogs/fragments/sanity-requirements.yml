@@ -1,0 +1,3 @@
+---
+trivial:
+  - Add sanity test runtime requirements for ansible-test.

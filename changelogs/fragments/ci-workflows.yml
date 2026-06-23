@@ -1,0 +1,6 @@
+---
+trivial:
+  - Add a Lint GitHub Actions workflow that runs pre-commit against all files on push and pull request.
+  - Add an Integration GitHub Actions workflow that runs ``ansible-test integration``
+    across the supported ansible-core matrix (2.14–2.21), surfacing a warning annotation
+    when the Akamai service is unavailable.

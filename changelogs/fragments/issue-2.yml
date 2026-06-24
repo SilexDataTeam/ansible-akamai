@@ -1,0 +1,3 @@
+---
+trivial:
+  - Update repository URLs in documentation and collection metadata from ``ansible-akamai`` to ``silexdata.akamai``.

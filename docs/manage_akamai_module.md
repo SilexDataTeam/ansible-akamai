@@ -18,7 +18,7 @@ Ansible Module for working with Akamai OPEN APIs
 - Or install directly from the source repository:
 
   ```shell
-  ansible-galaxy collection install git+https://github.com/SilexDataTeam/ansible-akamai.git
+  ansible-galaxy collection install git+https://github.com/SilexDataTeam/silexdata.akamai.git
   ```
 
 - Once installed, invoke the module by its fully qualified collection name, `silexdata.akamai.manage_akamai`

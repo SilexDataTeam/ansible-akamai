@@ -77,7 +77,7 @@ See the [Releasing guidelines](https://github.com/ansible/community-docs/blob/ma
 
 ## Release notes
 
-See the [changelog](https://github.com/SilexDataTeam/ansible-akamai/blob/main/CHANGELOG.md).
+See the [changelog](https://github.com/SilexDataTeam/silexdata.akamai/blob/main/CHANGELOG.md).
 
 ## More information
 

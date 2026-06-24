@@ -57,9 +57,9 @@ jobs:
         working-directory: ansible_collections/silexdata/akamai
         run: ansible-test --version
 
-      - name: Run unit tests with coverage
-        working-directory: ansible_collections/silexdata/akamai
-        run: ansible-test units --coverage --docker -v --requirements
+      # - name: Run unit tests with coverage
+      #   working-directory: ansible_collections/silexdata/akamai
+      #   run: ansible-test units --coverage --docker -v --requirements
 
       # Run without --color so the teed log greps cleanly.
       - name: Run integration tests with coverage

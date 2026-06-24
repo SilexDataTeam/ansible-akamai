@@ -1,0 +1,4 @@
+---
+trivial:
+  - Add ``ansible-test --version`` display step and HTML coverage report generation to the coverage CI workflow.
+  - Merge integration.yml tests into coverage.yml
